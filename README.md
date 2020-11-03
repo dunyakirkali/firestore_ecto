@@ -1,21 +1,25 @@
 # FirestoreEcto
 
-**TODO: Add description**
-
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `firestore_ecto` to your list of dependencies in `mix.exs`:
+## How to use FirestoreEcto.Proxy
 
 ```elixir
-def deps do
-  [
-    {:firestore_ecto, "~> 0.1.0"}
-  ]
-end
+{:ok, pid} = FirestoreEcto.Proxy.start_link(project: "firestore-37c38", database: "(default)")
+
+FirestoreEcto.Proxy.query(pid, "get Countries")
+
+FirestoreEcto.Proxy.stop(pid)
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/firestore_ecto](https://hexdocs.pm/firestore_ecto).
+## How to use DBConnection
 
+```elixir
+{:ok, conn} = DBConnection.start_link(FirestoreEcto.Protocol, project: "firestore-37c38", database: "(default)")
+
+DBConnection.execute(conn, %FirestoreEcto.Query{statement: "get Countries"}, [])
+```
+
+## How to use the Ecto Adapter
+
+```eixir
+FirestoreEctoTest.Repo.all(FirestoreEcto.Country)
+```
