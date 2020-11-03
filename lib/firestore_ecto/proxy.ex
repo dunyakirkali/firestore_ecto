@@ -9,24 +9,14 @@ defmodule FirestoreEcto.Proxy do
     GenServer.stop(pid, :normal)
   end
 
-  def query(pid, statement, params) do
+  def query(pid, statement, _params) do
     GenServer.call(pid, {:query, statement})
-  end
-
-  defp get_database(opts) do
-    [
-      "projects",
-      Keyword.get(opts, :project),
-      "databases",
-      Keyword.get(opts, :database)
-    ]
-    |> Enum.join("/")
   end
 
   # Server
 
   @impl true
-  def init(opts) do
+  def init(_opts) do
     Firestore.Client.connect()
   end
 
@@ -36,7 +26,7 @@ defmodule FirestoreEcto.Proxy do
   end
 
   @impl true
-  def handle_call({:query, statement}, _, channel) do
+  def handle_call({:query, _statement}, _, channel) do
     {:reply, {:ok, Firestore.Client.list_documents(channel, "countries")}, channel}
   end
 end

@@ -1,18 +1,10 @@
 defmodule FirestoreEcto do
-  @moduledoc """
-  Documentation for `FirestoreEcto`.
-  """
+  def child_spec(opts) do
+    DBConnection.child_spec(FirestoreEcto.Protocol, opts)
+  end
 
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> FirestoreEcto.hello()
-      :world
-
-  """
-  def hello do
-    :world
+  def execute(conn, query, params, opts) do
+    query = %FirestoreEcto.Query{statement: query}
+    DBConnection.prepare_execute(conn, query, params, opts)
   end
 end
